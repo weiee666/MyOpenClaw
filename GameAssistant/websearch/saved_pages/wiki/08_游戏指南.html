@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>游戏指南</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif;
+      margin: 0; padding: 0; background: #1a1a2e; color: #e0e0e0;
+    }
+    .header {
+      background: linear-gradient(135deg, #c0392b, #8e1a12);
+      padding: 20px 40px;
+    }
+    .header .badge {
+      display: inline-block; background: rgba(255,255,255,0.2);
+      color: #fff; padding: 3px 12px; border-radius: 12px;
+      font-size: 0.8em; margin-bottom: 8px;
+    }
+    .header h1 { margin: 0; color: #fff; font-size: 1.6em; }
+    .header .source {
+      margin-top: 8px; font-size: 0.85em; color: rgba(255,255,255,0.7);
+    }
+    .header .source a { color: #ffcdd2; }
+    .container {
+      display: flex; max-width: 1200px; margin: 30px auto; padding: 0 20px; gap: 24px;
+    }
+    .sidebar {
+      flex: 0 0 220px; background: #16213e;
+      border-radius: 8px; padding: 16px;
+      border: 1px solid #2d3561; height: fit-content;
+    }
+    .sidebar h3 { margin: 0 0 12px; font-size: 0.9em; color: #c0392b; text-transform: uppercase; letter-spacing: 1px; }
+    .sidebar ul { margin: 0; padding: 0 0 0 16px; }
+    .sidebar li { margin: 6px 0; font-size: 0.88em; }
+    .sidebar a { color: #90caf9; text-decoration: none; }
+    .sidebar a:hover { color: #fff; text-decoration: underline; }
+    .main {
+      flex: 1; background: #16213e;
+      border-radius: 8px; padding: 24px;
+      border: 1px solid #2d3561;
+    }
+    .content {
+      white-space: pre-wrap; word-wrap: break-word;
+      line-height: 1.9; font-size: 0.95em; color: #cfd8dc;
+    }
+    .nav-bar {
+      background: #0f3460; padding: 10px 40px;
+      display: flex; gap: 16px; flex-wrap: wrap;
+    }
+    .nav-bar a {
+      color: #90caf9; font-size: 0.88em; text-decoration: none;
+      padding: 4px 10px; border-radius: 4px;
+    }
+    .nav-bar a:hover { background: rgba(144,202,249,0.15); }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="badge">杀戮尖塔2 · 灰机Wiki</div>
+    <h1>游戏指南</h1>
+    <div class="source">来源：<a href="https://sts2.huijiwiki.com/wiki/%E6%B8%B8%E6%88%8F%E6%8C%87%E5%8D%97" target="_blank">https://sts2.huijiwiki.com/wiki/%E6%B8%B8%E6%88%8F%E6%8C%87%E5%8D%97</a></div>
+  </div>
+
+  <div class="nav-bar">
+    <a href="https://sts2.huijiwiki.com/wiki/%E9%A6%96%E9%A1%B5" target="_blank">🏠 首页</a>
+    <a href="https://sts2.huijiwiki.com/wiki/%E8%A7%92%E8%89%B2" target="_blank">👤 角色</a>
+    <a href="https://sts2.huijiwiki.com/wiki/%E6%B8%B8%E6%88%8F%E6%8C%87%E5%8D%97" target="_blank">📖 游戏指南</a>
+    <a href="https://sts2.huijiwiki.com/wiki/%E6%80%AA%E7%89%A9" target="_blank">👾 怪物图鉴</a>
+    <a href="https://sts2.huijiwiki.com/wiki/%E9%81%97%E7%89%A9" target="_blank">🏺 遗物</a>
+  </div>
+
+  <div class="container">
+    <div class="sidebar">
+      <h3>页内链接</h3>
+      <ul>
+<li><a href="https://sts2.huijiwiki.com/wiki/%E6%9D%80%E6%88%AE%E5%B0%96%E5%A1%942" target="_blank">杀戮尖塔2</a></li>
+<li><a href="https://sts2.huijiwiki.com/wiki/%E7%94%A8%E6%88%B7:%E6%98%82%E6%8B%89%E5%85%8B" target="_blank">昂拉克</a></li>
+<li><a href="https://sts2.huijiwiki.com/wiki/%E6%AD%BB%E4%BA%A1" target="_blank">死亡</a></li>
+<li><a href="https://sts2.huijiwiki.com/wiki/%E7%94%9F%E5%91%BD%E5%80%BC" target="_blank">生命值</a></li>
+<li><a href="https://sts2.huijiwiki.com/wiki/%E5%95%86%E5%BA%97" target="_blank">商店</a></li>
+<li><a href="https://sts2.huijiwiki.com/wiki/%E9%87%91%E5%B8%81" target="_blank">金币</a></li>
+<li><a href="https://sts2.huijiwiki.com/wiki/%E5%8D%A1%E7%89%8C" target="_blank">卡牌</a></li>
+<li><a href="https://sts2.huijiwiki.com/wiki/%E6%88%98%E6%96%97" target="_blank">战斗</a></li>
+<li><a href="https://sts2.huijiwiki.com/wiki/%E7%8A%B6%E6%80%81#壁垒" target="_blank">壁垒</a></li>
+<li><a href="https://sts2.huijiwiki.com/wiki/%E7%8A%B6%E6%80%81#残影" target="_blank">残影</a></li>
+<li><a href="https://sts2.huijiwiki.com/wiki/%E5%9D%9A%E5%9B%BA%E9%92%B3%E5%AD%90" target="_blank">坚固钳子</a></li>
+<li><a href="https://sts2.huijiwiki.com/wiki/%E5%9C%B0%E9%81%93%E8%99%AB" target="_blank">地道虫</a></li>
+<li><a href="https://sts2.huijiwiki.com/wiki/%E7%8A%B6%E6%80%81#埋地" target="_blank">埋地</a></li>
+<li><a href="https://sts2.huijiwiki.com/wiki/%E6%A0%BC%E6%8C%A1" target="_blank">格挡</a></li>
+<li><a href="https://sts2.huijiwiki.com/wiki/%E8%83%BD%E9%87%8F" target="_blank">能量</a></li>
+<li><a href="https://sts2.huijiwiki.com/wiki/%E5%82%A8%E5%90%9B" target="_blank">储君</a></li>
+<li><a href="https://sts2.huijiwiki.com/wiki/%E8%BE%89%E6%98%9F" target="_blank">辉星</a></li>
+<li><a href="https://sts2.huijiwiki.com/wiki/%E6%84%8F%E5%9B%BE" target="_blank">意图</a></li>
+<li><a href="https://sts2.huijiwiki.com/wiki/%E6%80%AA%E7%89%A9" target="_blank">页面</a></li>
+<li><a href="https://sts2.huijiwiki.com/wiki/%E6%88%BF%E9%97%B4" target="_blank">房间</a></li>
+<li><a href="https://sts2.huijiwiki.com/wiki/%E6%88%BF%E9%97%B4" target="_blank">这里</a></li>
+
+      </ul>
+    </div>
+    <div class="main">
+      <div class="content">“避战大怪”、“见牌就抓”、“懦夫才防”
+
+本页面介绍
+杀戮尖塔2
+的基本概念和操作方式，本文中的角色如果不做特别说明，均指玩家角色。
+
+这篇文章正在被
+编辑
+中，编辑完成前请不要同时编辑，以免撞车。此处查看
+需要帮助的词条列表
+。编辑者签名:
+昂拉克
+（
+留言
+） 2026年3月24日 (二) 21:50 (CST)，本提示有效期15天，过期请协助解除。
+
+生命（值）
+
+角色会在生命值降至0或更低的时候
+死亡
+，并终止对局进行分数结算，本局
+游戏失败
+。
+
+可参阅
+生命值
+。
+
+金币
+
+金币是游戏中的一种资源，主要用于在
+商店
+中购买卡牌、遗物、药水与卡牌移除服务。一些事件选项也需要足够金币才可选择。
+
+可以通过战后奖励、宝箱获得金币，一些事件、遗物、卡牌也可以提供金币。
+
+可参阅
+金币
+、
+商店
+。
+
+牌组与卡牌
+
+卡牌
+是战斗所用的主要资源，基于卡牌的牌组构筑、手牌管理构成了杀戮尖塔2的核心玩法。
+
+每个角色在游戏开始时都有一副初始牌组，并可随着游戏进程获得、升级或删除卡牌，构筑独特的牌组。
+
+可参阅：
+卡牌
+、
+战斗
+
+格挡
+
+格挡
+可以抵消伤害，是保证生存的主要手段。所有角色自己的回合开始时，当前角色失去全部格挡。
+
+部分效果允许角色/敌人在回合开始时保留一定或全部的格挡：
+
+壁垒
+壁垒
+格挡
+不会在你的回合开始时被移除。
+、
+残影
+残影
+你的下一回合开始时
+格挡
+不会消失。
+、
+坚固钳子
+坚固钳子
+可以跨回合保留最多
+10
+点
+格挡
+。
+
+地道虫
+特性
+埋地
+埋地
+格挡
+不会在
+该怪物
+的回合开始时移除。如果所有
+格挡
+被移除，则将其
+击晕
+。
+
+可参阅：
+格挡
+
+能量
+
+打出卡牌需要花费
+能量
+，角色具有3点基础的能量上限。能量会在回合开始时清空，然后补充至上限。
+
+一些效果可以提供额外的能量上限或能量。
+
+储君
+的
+辉星
+是一种与能量类似的机制，不过
+辉星
+在回合开始时不会清空，也不会自动补充。
+
+可参阅：
+能量
+、
+辉星
+
+游戏回合
+
+玩家与敌人交替进行回合（第一个回合总是玩家的）。
+
+敌人会在它们的回合中执行它们的意图（如果存在多个敌人，它们会按从左到右的顺序执行自己的意图）。
+
+在你的回合中，你可以在敌人形象上方或将鼠标悬停在敌人身上来查看它们下一次的意图。
+
+敌人具有什么样的
+意图
+可能是固定的，也可能是在一定范围内随机的。关于具体某个敌人的行为模式，参见对应
+页面
+。
+
+房间
+
+玩家在游戏进程中前进时进入的节点，游戏内分别称为未知、商人、宝箱、休息、敌人，精英和Boss。
+
+新的阶段会比上个阶段少一个楼层。每个阶段必定有一个偏中间的楼层，其房间均为
+宝箱
+；最后节点前的楼层，其房间均为'
+休息
+；而最后节点必定是Boss。
+
+若需查看具体的房间类型，请参看上面的超链接或直接点击
+这里
+。
+
+战斗
+
+地图选择</div>
+    </div>
+  </div>
+</body>
+</html>

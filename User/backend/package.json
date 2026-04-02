@@ -1,0 +1,14 @@
+{
+  "name": "openclaw-user-backend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "@kubernetes/client-node": "^0.21.0",
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}

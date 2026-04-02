@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openclaw-user-backend
+  namespace: openclaw-user-service
+  labels:
+    app.kubernetes.io/name: openclaw-user-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: openclaw-user-backend
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: openclaw-user-backend
+    spec:
+      serviceAccountName: openclaw-user-backend
+      containers:
+        - name: api
+          image: weiee666/openclaw-user-backend:v0.1.1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 4000
+              name: http
+          env:
+            - name: PORT
+              value: "4000"
+            - name: OPENCLAW_IMAGE
+              value: "weiee666/myopenclaw:latest"
+            - name: OPENCLAW_STORAGE_CLASS
+              value: ""
+            - name: OPENCLAW_INGRESS_CLASS
+              value: ""
