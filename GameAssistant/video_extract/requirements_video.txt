@@ -1,0 +1,4 @@
+yt-dlp>=2024.1.0
+openai>=1.0.0
+qdrant-client>=1.7.0
+python-dotenv>=1.0.0

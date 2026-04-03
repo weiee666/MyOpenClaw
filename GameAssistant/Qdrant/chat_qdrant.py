@@ -16,20 +16,22 @@ QDRANT_URL     = os.getenv("QDRANT_URL")
 QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-COLLECTION_NAME = "STS2_GameData"
-EMBED_MODEL     = "text-embedding-3-small"
-CHAT_MODEL      = "gpt-4o"
-TOP_K           = 10    # 每次检索召回条数
+COLLECTION_GAME  = "STS2_GameData"
+COLLECTION_VIDEO = "GameVideo_Guides"
+EMBED_MODEL      = "text-embedding-3-small"
+CHAT_MODEL       = "gpt-4o"
+TOP_K            = 8    # 每个 collection 召回条数
 # ──────────────────────────────────────────────────────────
 
 openai_client = OpenAI(api_key=OPENAI_API_KEY)
 qdrant_client = QdrantClient(url=QDRANT_URL, api_key=QDRANT_API_KEY)
 
 SYSTEM_PROMPT = """你是杀戮尖塔2的专业游戏助手。
-根据提供的游戏数据（卡牌、遗物、药水、角色、怪物等），回答玩家的问题。
-- 只使用提供的数据作答，不要编造不存在的内容
-- 回答要具体、实用，适合玩家实际使用
-- 如果数据不足以回答，请直接说明
+参考资料分两部分：【游戏数据】来自结构化数据库，【视频攻略】来自玩家上传的实战视频转录。
+- 优先综合两部分资料回答，互相印证
+- 引用视频内容时注明视频标题和时间
+- 只使用提供的资料作答，不要编造
+- 回答要具体、实用
 - 用中文回答"""
 
 
@@ -38,8 +40,8 @@ def get_embedding(text: str) -> list[float]:
     return resp.data[0].embedding
 
 
-def search(query: str, top_k: int = TOP_K, table_filter: str = None) -> list[dict]:
-    """向量检索，可选按表名过滤"""
+def search_game(query: str, top_k: int = TOP_K, table_filter: str = None) -> list[dict]:
+    """检索游戏结构化数据"""
     query_vec = get_embedding(query)
 
     search_filter = None
@@ -53,34 +55,76 @@ def search(query: str, top_k: int = TOP_K, table_filter: str = None) -> list[dic
         )
 
     hits = qdrant_client.query_points(
-        collection_name=COLLECTION_NAME,
+        collection_name=COLLECTION_GAME,
         query=query_vec,
         limit=top_k,
         query_filter=search_filter,
     ).points
 
-    return [{"score": h.score, **h.payload} for h in hits]
+    return [{"score": h.score, "_source": "game", **h.payload} for h in hits]
 
 
-def format_context(hits: list[dict]) -> str:
-    """把检索结果格式化为 GPT 上下文"""
-    lines = []
-    for i, h in enumerate(hits, 1):
-        score = h.get("score", 0)
-        text  = h.get("text", "")
-        lines.append(f"[{i}] (相关度:{score:.3f}) {text}")
-    return "\n".join(lines)
+def search_video(query: str, top_k: int = TOP_K) -> list[dict]:
+    """检索视频攻略转录"""
+    query_vec = get_embedding(query)
+
+    hits = qdrant_client.query_points(
+        collection_name=COLLECTION_VIDEO,
+        query=query_vec,
+        limit=top_k,
+    ).points
+
+    return [{"score": h.score, "_source": "video", **h.payload} for h in hits]
 
 
-def ask(question: str) -> str:
-    hits    = search(question)
-    context = format_context(hits)
+def format_context(game_hits: list[dict], video_hits: list[dict]) -> str:
+    parts = []
+
+    if game_hits:
+        lines = ["【游戏数据】"]
+        for i, h in enumerate(game_hits, 1):
+            lines.append(f"[{i}] (相关度:{h['score']:.3f}) {h.get('text', '')}")
+        parts.append("\n".join(lines))
+
+    if video_hits:
+        lines = ["【视频攻略】"]
+        for i, h in enumerate(video_hits, 1):
+            title      = h.get("video_title", "未知视频")
+            characters = ",".join(h.get("characters", []))
+            cards      = ",".join(h.get("cards", []))
+            relics     = ",".join(h.get("relics", []))
+            potions    = ",".join(h.get("potions", []))
+            entity_parts = []
+            if characters:
+                entity_parts.append(f"角色:{characters}")
+            if cards:
+                entity_parts.append(f"卡牌:{cards}")
+            if relics:
+                entity_parts.append(f"遗物:{relics}")
+            if potions:
+                entity_parts.append(f"药水:{potions}")
+            entity_line = " | ".join(entity_parts) if entity_parts else "（无实体标签）"
+            text = h.get("text", "")[:200]
+            lines.append(
+                f"[{i}] 《{title}》 (相关度:{h['score']:.3f})\n"
+                f"{entity_line}\n"
+                f"{text}..."
+            )
+        parts.append("\n".join(lines))
+
+    return "\n\n".join(parts)
+
+
+def ask(question: str, table_filter: str = None) -> str:
+    game_hits  = search_game(question, table_filter=table_filter)
+    video_hits = search_video(question)
+    context    = format_context(game_hits, video_hits)
 
     response = openai_client.chat.completions.create(
         model=CHAT_MODEL,
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user",   "content": f"游戏数据：\n{context}\n\n问题：{question}"},
+            {"role": "user",   "content": f"{context}\n\n问题：{question}"},
         ],
         temperature=0.3,
     )
@@ -94,11 +138,11 @@ def main():
 
     # 检查 Collection
     try:
-        info = qdrant_client.get_collection(COLLECTION_NAME)
-        print(f"  已连接数据库，共 {info.points_count} 条向量")
+        info_game  = qdrant_client.get_collection(COLLECTION_GAME)
+        info_video = qdrant_client.get_collection(COLLECTION_VIDEO)
+        print(f"  游戏数据：{info_game.points_count} 条 | 视频攻略：{info_video.points_count} 条")
     except Exception as e:
         print(f"  ✗ 无法连接 Qdrant：{e}")
-        print(f"  请先运行 upload_to_qdrant.py 入库")
         return
 
     print("  输入 quit 退出，输入 /卡牌、/遗物、/药水 可限定搜索范围")
@@ -135,24 +179,10 @@ def main():
 
         print("  检索中...", flush=True)
         try:
-            answer = ask(question) if not table_filter else _ask_filtered(question, table_filter)
+            answer = ask(question, table_filter=table_filter)
             print(f"\n助手：{answer}")
         except Exception as e:
             print(f"  ✗ 出错：{e}")
-
-
-def _ask_filtered(question: str, table_filter: str) -> str:
-    hits    = search(question, table_filter=table_filter)
-    context = format_context(hits)
-    response = openai_client.chat.completions.create(
-        model=CHAT_MODEL,
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user",   "content": f"游戏数据：\n{context}\n\n问题：{question}"},
-        ],
-        temperature=0.3,
-    )
-    return response.choices[0].message.content
 
 
 if __name__ == "__main__":
